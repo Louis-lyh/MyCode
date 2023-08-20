@@ -7,11 +7,20 @@ public class Sorting : MonoBehaviour
     private void Start() 
     {
         //乱序数组
-        float[] numbers = new float[]{2,2.5f,3,3.5f,1,0,0.5f,1.1f,1.2f,1.3f,1.4f,1.5f,4.5f,1.6f,1.7f};
+        float[] numbers = new float[]{2f,2.1f,2.5f,3,3.5f,1,0,0.5f,1.1f,1.2f,1.3f,1.4f,1.5f,4.5f,1.6f,1.7f,5.1f,4.1f,5.2f,4.2f,5.3f,4.3f,5.4f,4.4f};
         //冒泡排序
-        BubbleSort(numbers);
+        float[] numbers01 = new float[numbers.Length];
+        numbers.CopyTo(numbers01,0);
+        BubbleSort(numbers01);
         //插入排序
-        InsertionSort(numbers);
+        float[] numbers02 = new float[numbers.Length];
+        numbers.CopyTo(numbers02,0);
+        InsertionSort(numbers02);
+        //快速排序
+        float[] numbers03 = new float[numbers.Length];
+        numbers.CopyTo(numbers03,0);
+        QuickSort(numbers03,0,numbers03.Length - 1);
+         Log("快速排序",numbers03);
     }
 
     //冒泡排序
@@ -42,26 +51,65 @@ public class Sorting : MonoBehaviour
     //插入排序
     private void InsertionSort(float[] numbers)
     {
-        for(int i = 1; i < numbers.Length - 1; i++)
+        for(int i = 1; i < numbers.Length; i++)
         {
-            for(int j = i; j <  numbers.Length - 1; j--)
+            for(int j = i; j > 0; j--)
             {
                 int number01 = (int) numbers[j - 1];
                 int number02 = (int) numbers[j];
                 //比前面的小交换
                 if(number02 < number01)
                 {
-                    float temp = numbers[i];
-                    numbers[i] = numbers[j];
+                    float temp = numbers[j - 1];
+                    numbers[j - 1] = numbers[j];
                     numbers[j] = temp;
                 }
-                else //比前面的大直接插入下一个
-                    break;
             }
         }
 
          Log("插入排序",numbers);
     }
+
+    //快速排序
+    private void QuickSort(float[] numbers,int startIndex,int endIndex)
+    {
+        if(startIndex > endIndex)
+            return;
+
+        //完成一次排序
+        var centerIndex = QuickSortUnit(numbers,startIndex,endIndex);
+        //将左边进行排序
+        QuickSortUnit(numbers,startIndex,centerIndex - 1);
+        //将右边进行排序
+        QuickSortUnit(numbers,centerIndex,endIndex);
+    }
+
+    //快速排序
+    private int QuickSortUnit(float[] numbers ,int startIndex,int endIndex)
+    {
+        float key = numbers[startIndex];
+        while(endIndex < startIndex)
+        {
+            /*从后向前搜索比key小的值*/
+            while((int)numbers[endIndex] >= (int)key && endIndex > startIndex)
+                endIndex--;
+            /*比key小的放左边*/
+            numbers[startIndex] = numbers[endIndex];
+
+            /*从前向后搜索比key大的值，比key大的放右边*/
+            while((int)numbers[startIndex] <= (int)key && endIndex > startIndex)
+                ++startIndex;
+
+            /*比key大的放右边*/
+            numbers[endIndex] = numbers[startIndex];
+        }
+        /*左边都比key小，右边都比key大。//将key放在游标当前位置。//此时startIndex等于endIndex */
+        numbers[startIndex] = key;
+        
+        return endIndex;
+    }
+
+
 
     //打印
     private void Log(string sortName,float[] numbers)
