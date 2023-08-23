@@ -20,6 +20,7 @@ public class Sorting : MonoBehaviour
         float[] numbers03 = new float[numbers.Length];
         numbers.CopyTo(numbers03,0);
         QuickSort(numbers03,0,numbers03.Length - 1);
+        Log("快速排序",numbers03);
         //归并
         float[] numbers04 = new float[numbers.Length];
         numbers.CopyTo(numbers04,0);
@@ -70,8 +71,7 @@ public class Sorting : MonoBehaviour
                 }
             }
         }
-
-         Log("插入排序",numbers);
+        Log("插入排序",numbers);
     }
 
     //快速排序
@@ -117,30 +117,45 @@ public class Sorting : MonoBehaviour
     {
         if(startIndex < endIndex)
         {
+            //中间缩影
             int mid = (startIndex + endIndex) / 2;
+            //排序左边
             MergeSort(numbers,startIndex,mid);
+            //排序右边
             MergeSort(numbers,mid + 1,endIndex);
+            //有序合并
             MergeSortUnit(numbers, startIndex, mid, endIndex);
         }
     }
+    //归并排序
     private void MergeSortUnit(float[] numnbers,int startIndex,int mid,int endIndex)
     {
+        //存储合并后的数组
         float[] temp = new float[endIndex - startIndex + 1];
+        //左边数组的开始
         int m = startIndex;
+        //右边数组的开始
         int n = mid + 1;
+        //融合后数组的索引
         int k = 0;
-
+        
+        //合并
         while(n <= endIndex && m <= mid)
         {
+            //先将小的数放入合并数组
             if(numnbers[m] > numnbers[n])
                 temp[k++] = numnbers[n++];
             else
                 temp[k++] = numnbers[m++];
         }
+        //将右边数组没放完的数依次放入合并数组
         while(n < endIndex + 1)
             temp[k++] = numnbers[n++];
+        //将左边数组没放完的数一次放入合并数组
         while (m < mid + 1) 
             temp[k++] = numnbers[m++];
+        
+        //将合并数组依次放入远数组
         for (k = 0, m = startIndex; m < endIndex + 1; k++, m++) 
             numnbers[m] = temp[k];
     }
