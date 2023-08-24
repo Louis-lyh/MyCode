@@ -26,6 +26,11 @@ public class Sorting : MonoBehaviour
         numbers.CopyTo(numbers04,0);
         MergeSort(numbers04,0,numbers04.Length - 1);
         Log("归并",numbers04);
+        //堆排序
+        float[] numbers05 = new float[numbers.Length];
+        numbers.CopyTo(numbers05,0);
+        Heap_sort(numbers05);
+        Log("堆排序",numbers05);
     }
 
     //冒泡排序
@@ -87,7 +92,6 @@ public class Sorting : MonoBehaviour
         //将右边进行排序
         QuickSort(numbers,centerIndex + 1,endIndex);
     }
-
     //快速排序
     private int QuickSortUnit(float[] numbers ,int startIndex,int endIndex)
     {
@@ -128,7 +132,7 @@ public class Sorting : MonoBehaviour
         }
     }
     //归并排序
-    private void MergeSortUnit(float[] numnbers,int startIndex,int mid,int endIndex)
+    private void MergeSortUnit(float[] numbers,int startIndex,int mid,int endIndex)
     {
         //存储合并后的数组
         float[] temp = new float[endIndex - startIndex + 1];
@@ -143,23 +147,80 @@ public class Sorting : MonoBehaviour
         while(n <= endIndex && m <= mid)
         {
             //先将小的数放入合并数组
-            if(numnbers[m] > numnbers[n])
-                temp[k++] = numnbers[n++];
+            if(numbers[m] > numbers[n])
+                temp[k++] = numbers[n++];
             else
-                temp[k++] = numnbers[m++];
+                temp[k++] = numbers[m++];
         }
         //将右边数组没放完的数依次放入合并数组
         while(n < endIndex + 1)
-            temp[k++] = numnbers[n++];
+            temp[k++] = numbers[n++];
         //将左边数组没放完的数一次放入合并数组
         while (m < mid + 1) 
-            temp[k++] = numnbers[m++];
+            temp[k++] = numbers[m++];
         
         //将合并数组依次放入远数组
         for (k = 0, m = startIndex; m < endIndex + 1; k++, m++) 
-            numnbers[m] = temp[k];
+            numbers[m] = temp[k];
     }
 
+    //堆排序
+    private void Heap_sort(float[] numbers)
+    {
+        int length = numbers.Length;
+        // 初始化，i从最后一个父节点开始挑战
+        for (int i = length / 2 - 1; i >= 0; i--)
+        {
+            Max_Heapify(numbers,i,length - 1);
+        }
+        // 先将第一个元素和已经排好的元素前一位交换，在重新调整，直到排序完毕
+        for (int i = length - 1; i > 0; i--)
+        {
+            float temp = numbers[0];
+            numbers[0] = numbers[i];
+            numbers[i] = temp;
+
+            Max_Heapify(numbers,0,i - 1);
+        }
+    }
+    //最大堆
+    private void Max_Heapify(float[] numbers, int start, int end)
+    {
+        // 建立父节点指标和子节点指标
+        int dad = start;
+        int son = dad * 2 + 1;
+        
+        //若子节点指标在范围内比较
+        while(son <= end)
+        {
+            //先比较两个子节点大小
+            if (son + 1 <= end && numbers[son] < numbers[son + 1])
+            {
+                son++;
+            }
+            // 如果父节点大于子节点代表调整完毕，直接跳出函数
+            if(numbers[dad] > numbers[son])
+                return;
+            else
+            {
+                float temp = numbers[dad];
+                numbers[dad] = numbers[son];
+                numbers[son] = temp;
+
+                dad = son;
+                son = dad * 2 + 1;
+            }
+        }
+        
+
+    }
+    //交换
+    private void Swap(ref float a,ref float b)
+    {
+        float temp = a;
+        a = b;
+        b = temp;
+    }
 
     //打印
     private void Log(string sortName,float[] numbers)
