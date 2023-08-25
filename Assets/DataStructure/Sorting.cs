@@ -12,20 +12,24 @@ public class Sorting : MonoBehaviour
         float[] numbers01 = new float[numbers.Length];
         numbers.CopyTo(numbers01,0);
         BubbleSort(numbers01);
+        
         //插入排序
         float[] numbers02 = new float[numbers.Length];
         numbers.CopyTo(numbers02,0);
         InsertionSort(numbers02);
+        
         //快速排序
         float[] numbers03 = new float[numbers.Length];
         numbers.CopyTo(numbers03,0);
         QuickSort(numbers03,0,numbers03.Length - 1);
         Log("快速排序",numbers03);
+        
         //归并
         float[] numbers04 = new float[numbers.Length];
         numbers.CopyTo(numbers04,0);
         MergeSort(numbers04,0,numbers04.Length - 1);
         Log("归并",numbers04);
+        
         //堆排序
         float[] numbers05 = new float[numbers.Length];
         numbers.CopyTo(numbers05,0);
@@ -171,6 +175,7 @@ public class Sorting : MonoBehaviour
         // 初始化，i从最后一个父节点开始挑战
         for (int i = length / 2 - 1; i >= 0; i--)
         {
+            //排序为最大堆
             Max_Heapify(numbers,i,length - 1);
         }
         // 先将第一个元素和已经排好的元素前一位交换，在重新调整，直到排序完毕
@@ -179,7 +184,7 @@ public class Sorting : MonoBehaviour
             float temp = numbers[0];
             numbers[0] = numbers[i];
             numbers[i] = temp;
-
+            //排序为最大堆
             Max_Heapify(numbers,0,i - 1);
         }
     }
@@ -193,7 +198,7 @@ public class Sorting : MonoBehaviour
         //若子节点指标在范围内比较
         while(son <= end)
         {
-            //先比较两个子节点大小
+            //先比较两个子节点大小 选出最大子节点
             if (son + 1 <= end && numbers[son] < numbers[son + 1])
             {
                 son++;
@@ -203,6 +208,7 @@ public class Sorting : MonoBehaviour
                 return;
             else
             {
+                //子节点大于父节点交换
                 float temp = numbers[dad];
                 numbers[dad] = numbers[son];
                 numbers[son] = temp;
@@ -211,8 +217,6 @@ public class Sorting : MonoBehaviour
                 son = dad * 2 + 1;
             }
         }
-        
-
     }
     //交换
     private void Swap(ref float a,ref float b)
