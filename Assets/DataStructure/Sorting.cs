@@ -41,6 +41,12 @@ public class Sorting : MonoBehaviour
         numbers.CopyTo(numbers06,0);
         ShellSort(numbers06);
         Log("希尔排序",numbers06);
+
+        //选择排序
+        float[] numbers07 = new float[numbers.Length];
+        numbers.CopyTo(numbers07,0);
+        SelectSort(numbers07);
+        Log("选择排序",numbers07);
     }
 
     //冒泡排序
@@ -245,6 +251,25 @@ public class Sorting : MonoBehaviour
             }
         }
     }
+    //选择排序
+    private void SelectSort(float[] numbers)
+    {
+        for(int i = 0 ; i < numbers.Length - 1; i++)
+        {
+            int minIndex = i;
+            //找到最小值的索引
+            for(int j = i + 1; j < numbers.Length;j++)
+            {
+                if((int)numbers[j] < (int)numbers[minIndex])
+                    minIndex = j;
+            }
+            //交换
+            float temp = numbers[i];
+            numbers[i] = numbers[minIndex];
+            numbers[minIndex] = temp;
+        }
+    }
+
 
     //打印
     private void Log(string sortName,float[] numbers)
