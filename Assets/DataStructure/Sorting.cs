@@ -35,6 +35,12 @@ public class Sorting : MonoBehaviour
         numbers.CopyTo(numbers05,0);
         Heap_sort(numbers05);
         Log("堆排序",numbers05);
+        
+        //希尔排序
+        float[] numbers06 = new float[numbers.Length];
+        numbers.CopyTo(numbers06,0);
+        ShellSort(numbers06);
+        Log("希尔排序",numbers06);
     }
 
     //冒泡排序
@@ -199,12 +205,12 @@ public class Sorting : MonoBehaviour
         while(son <= end)
         {
             //先比较两个子节点大小 选出最大子节点
-            if (son + 1 <= end && numbers[son] < numbers[son + 1])
+            if (son + 1 <= end && (int)numbers[son] < (int)numbers[son + 1])
             {
                 son++;
             }
             // 如果父节点大于子节点代表调整完毕，直接跳出函数
-            if(numbers[dad] > numbers[son])
+            if((int)numbers[dad] > (int)numbers[son])
                 return;
             else
             {
@@ -218,12 +224,26 @@ public class Sorting : MonoBehaviour
             }
         }
     }
-    //交换
-    private void Swap(ref float a,ref float b)
+    //希尔排序
+    private void ShellSort(float[] numbers)
     {
-        float temp = a;
-        a = b;
-        b = temp;
+        //gap 为分组增量
+        for (int gap = numbers.Length / 2; gap > 0; gap /=2 )
+        {
+            // 分组                                                                                     
+            for (int i = gap; i < numbers.Length; i++)
+            {
+                var j = i;
+                var current = numbers[i];
+                //通过增量分组的元素进行比较
+                while (j - gap >= 0 && (int)current < (int)numbers[j - gap])
+                {
+                    numbers[j] = numbers[j - gap];
+                    j = j - gap;
+                }
+                numbers[j] = current;
+            }
+        }
     }
 
     //打印
