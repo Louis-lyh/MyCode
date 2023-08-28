@@ -47,6 +47,12 @@ public class Sorting : MonoBehaviour
         numbers.CopyTo(numbers07,0);
         SelectSort(numbers07);
         Log("选择排序",numbers07);
+        
+        //计数排序
+        float[] numbers08 = new float[numbers.Length];
+        numbers.CopyTo(numbers08,0);
+        numbers08 = CountingSort(numbers08);
+        Log("计数排序",numbers08);
     }
 
     //冒泡排序
@@ -268,6 +274,42 @@ public class Sorting : MonoBehaviour
             numbers[i] = numbers[minIndex];
             numbers[minIndex] = temp;
         }
+    }
+    //计数排序
+    private float[] CountingSort(float[] numbers)
+    {
+        //找到最大数
+        int maxNumber = 0;
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            int number = (int) numbers[i] + 1;
+            if (number > maxNumber)
+                maxNumber = number;
+        }
+        //计数
+        int[] countNumbers = new int[maxNumber];
+        for (int i = 0; i < numbers.Length; i++)
+        {
+            int index = (int)numbers[i];
+            countNumbers[index] += 1;
+        }
+        //排序
+        int Count = 0;
+        float[] numbersSort = new float[numbers.Length];
+        for (int i = 0; i < countNumbers.Length; i++)
+        {
+            Count += countNumbers[i];
+            countNumbers[i] = Count;
+        }
+        for (int i = numbers.Length - 1; i >= 0; i--)
+        {
+            int index = (int)numbers[i];
+            int posIndex = countNumbers[index] - 1;
+            numbersSort[posIndex] = numbers[i];
+            countNumbers[index] -= 1;
+        }
+        
+        return numbersSort;
     }
 
 
