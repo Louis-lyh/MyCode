@@ -9,10 +9,13 @@ public class LinearList : MonoBehaviour
     void Start()
     {
         // 测试链表
-        TestLNodeList();
+        //TestLNodeList();
         
         // 测试栈
-        TestLStack();
+       // TestLStack();
+
+        // 测试队列
+        TestLQueue();
 
     }
 
@@ -103,7 +106,51 @@ public class LinearList : MonoBehaviour
         }
         
     }
+    
+    // 测试队列
+    private void TestLQueue()
+    {
+        LNodeQueue queue = new LNodeQueue();
 
+        int value = 1;
+        while(value < 10)
+        {
+            queue.AddQueue(value);
+            value++;
+            Debug.Log("queue.Lenght "+queue.Length);
+        }
+
+        queue.AddQueue(value);
+        Debug.Log("queue :  " + queue.ToString());
+        value = queue.Delete();
+        Debug.Log("value :  " + value);
+        Debug.Log("queue :  " + queue.ToString());
+        value = queue.Delete();
+        Debug.Log("value :  " + value);
+
+        Debug.Log("queue :  " + queue.ToString());
+
+        queue.AddQueue(value);
+        Debug.Log("queue.Lenght "+queue.Length);
+        Debug.Log("queue :  " + queue.ToString());
+
+
+        value = queue.Delete();
+        value = queue.Delete();
+
+        queue.AddQueue(value);
+        Debug.Log("queue.Lenght "+queue.Length);
+        Debug.Log("queue :  " + queue.ToString());
+
+
+        value = queue.Delete();
+        value = queue.Delete();
+
+        queue.AddQueue(value);
+        Debug.Log("queue.Lenght "+queue.Length);
+        Debug.Log("queue :  " + queue.ToString());
+
+    }
 }
 
 #region 链表
@@ -241,16 +288,26 @@ class LStack<T>
         Top = -1;
     }
     // 栈
-    public T[] Datas;
+    private T[] Datas;
     // 长度
     public int Length => Datas.Length;
     
     // 栈顶位置
     public int Top;
+    // 判断堆栈是否已满
+    public bool IsFull()
+    {
+        return Top == Length - 1;
+    }
+    // 判断堆栈是否为空
+    public bool IsEmpty()
+    {
+        return Top < 0;
+    }
     // 入栈
     public void Push(T data)
     {
-        if (Top == Length - 1)
+        if (IsFull())
         {
             Debug.LogError("栈满了");
             return;
@@ -260,7 +317,7 @@ class LStack<T>
     // 出栈
     public T Pop()
     {
-        if (Top == -1)
+        if (IsEmpty())
         {
             Debug.LogError("栈空了");
             return default(T);
@@ -269,7 +326,7 @@ class LStack<T>
         return  Datas[Top--];
     }
 }
-
+// 链式存储堆栈
 class LNodeListStack
 {
 
@@ -284,7 +341,11 @@ class LNodeListStack
     
     // 长度
     public int Length => Datas.Length();
-    
+    // 判断堆栈是否为空
+    public bool IsEmpty()
+    {
+        return Datas.Header.Next == null;
+    }
     // 入栈
     public void Push(int data)
     {
@@ -308,6 +369,170 @@ class LNodeListStack
 
         return temp.Data;
     }
+}
+
+#endregion
+
+#region 队列
+class LQueue<T>
+{
+
+    public LQueue(int length)
+    {
+        _datas = new T[length];
+        _front = -1;
+        _after = -1;
+    }
+
+    // 数据
+    private T[] _datas;
+    // 前
+    private int _front;
+    // 后
+    private int _after;
+
+    // 长度
+    public int Lenght
+    {
+        get
+        {
+            if(_front > _after)
+                return _after + _datas.Length - _front;
+            else
+                return _after - _front;
+        }
+    }
+    // 判断队列是否满了
+    public bool IsFull()
+    {
+        return Lenght == _datas.Length - 1;
+    }
+    // 判断队列是否为空
+    public bool IsEmptry()
+    {
+        return Lenght == 0;
+    }
+
+    // 加入队列
+    public void AddQueue(T data)
+    {
+        if(IsFull())
+        {
+            Debug.LogError("队列满了");
+            return;
+        }
+        _after = (_after + 1) % _datas.Length;
+        _datas[_after] = data;
+    }
+    // 删除队列
+    public T Delete()
+    {
+        if(IsEmptry())
+        {
+            Debug.LogError("队列为空");
+            return default;
+        }
+        
+        _front = (_front + 1) % _datas.Length;
+        var temp = _datas[_front];
+        _datas[_front] = default;
+
+        return temp;
+    }
+
+    public override string ToString()
+    {
+        int f = _front;
+        int a = _after;
+        string str = "";
+        while(f != a)
+        {
+            f = (f + 1) % _datas.Length;
+            str += "" +_datas[f] + " , ";
+        }
+
+        return str;
+    }
+}
+
+// 链式存储队列
+class LNodeQueue
+{
+
+    public LNodeQueue()
+    {
+        _front = new LNode();
+        _after = new LNode();
+    }
+
+    // 数据
+    LNode _front;
+    // 尾节点
+    LNode _after;
+
+    // 长度
+    public int Length => GetLength();
+    private int GetLength()
+    {
+        var temp = _front.Next;
+        int i = 0;
+        while(temp != null)
+        {
+            temp = temp.Next;
+            i++;
+        }
+
+        return i;
+    }
+
+    // 添加
+    public void AddQueue(int data)
+    {
+       // 新建
+       LNode newNode = new LNode();
+       newNode.Data = data;
+
+        // 头节点为空
+        if(_front.Next == null)
+            _front.Next = newNode;
+
+        // 尾节点为空
+        if(_after.Next == null)
+            _after.Next = newNode;
+        else
+        {
+            _after.Next.Next = newNode;
+            _after.Next = newNode;
+        }
+    }
+    // 删除
+    public int Delete()
+    {
+       if(_front.Next == null)
+       {
+           Debug.LogError("队列为空");
+           return -1;
+       }
+
+       var temp = _front.Next;
+       _front.Next = temp.Next;
+
+        return temp.Data;
+    }
+
+    public override string ToString()
+    {
+        var temp = _front.Next;
+        string str = "";
+        while(temp != null)
+        {
+            str += temp.Data + " , ";
+            temp = temp.Next;
+        }
+
+        return str;
+    }
+
 }
 
 #endregion
