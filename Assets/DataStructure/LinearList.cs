@@ -485,6 +485,12 @@ class LNodeQueue
         return i;
     }
 
+    // 是否为空
+    public bool IsEmptry()
+    {
+        return GetLength() == 0;
+    }
+
     // 添加
     public void AddQueue(int data)
     {

@@ -26,24 +26,48 @@ public class Tree : MonoBehaviour
     private void TestBinarySearchTree()
     {
         BinarySearchTree tree = new BinarySearchTree();
-        tree.Insert(5);
-        tree.Insert(2);
-        tree.Insert(8);
-        tree.Insert(3);
-        tree.Insert(6);
-        tree.Insert(4);
-        tree.Insert(7);
-        tree.Insert(1);
-        tree.Insert(9);
-        tree.Insert(0);
-        tree.Insert(10);
+        tree.RecursiveInset(5);
+        tree.RecursiveInset(2);
+        tree.RecursiveInset(8);
+        tree.RecursiveInset(3);
+        tree.RecursiveInset(6);
+        tree.RecursiveInset(4);
+        tree.RecursiveInset(7);
+        tree.RecursiveInset(1);
+        tree.RecursiveInset(9);
+        tree.RecursiveInset(0);
+        tree.RecursiveInset(10);
         
+        // 遍历
+        TestOrderTraversal(tree);
+
+        // 最大元素
+        Debug.Log("最大元素： "+tree.FindMax().Data);
+        // 最小元素
+        Debug.Log("最小元素： "+tree.FindMin().Data);
+        // 高度
+        Debug.Log("高度："+tree.GetHeight());
+        // 删除
+        tree.Delete(10);
+        // 中序
+        tree.InOrderTraversal();
+        // 删除
+        tree.Delete(2);
+         // 中序
+        tree.InOrderTraversal();
+        // 高度
+        Debug.Log("高度："+tree.GetHeight());
+    }
+    private void TestOrderTraversal(BinarySearchTree tree)
+    {
         // 先序
         tree.PreOrderTraversal();
         // 中序
         tree.InOrderTraversal();
         // 后续
         tree.PostOrderTraversal();
+        // 层序
+        tree.LevelOrderTraversal();
     }
 
     // 二分查找
@@ -97,15 +121,37 @@ class BinarySearchTree
     // 获取高度
     public int GetHeight()
     {
-        return 0;
+        return GetHeight(RootNode);
+    }
+    private int GetHeight(TreeNode node)
+    {
+        if(node == null)
+            return 0;
+
+        var leftHeight = GetHeight(node.Left) + 1;
+        var rightHeight = GetHeight(node.Right) + 1;
+
+        return Mathf.Max(leftHeight,rightHeight);
     }
     
     // 查找元素返回其所在节点的地址
     public TreeNode Find(int data)
     {
+        var temp = RootNode;
+        while(temp != null)
+        {
+            // 找到
+            if(temp.Data == data)
+                return temp;
+            // 在坐标
+            if(temp.Data > data)
+                temp = temp.Left;
+            // 在右边
+            else
+                temp = temp.Right;
+        }
         return null;
-    }
-    
+    }    
     // 插入
     public void Insert(int data)
     {
@@ -151,23 +197,132 @@ class BinarySearchTree
                 }
             }
         }
-
     }
-    
-    // 删除
-    public TreeNode Delete(int data)
+    // 递归插入
+    public void RecursiveInset(int data)
     {
-        return null;
+        RootNode = RecursiveInset(data,RootNode);
+    }
+    private TreeNode RecursiveInset(int data,TreeNode node)
+    {
+        if(node == null)
+        {
+            TreeNode newNode = new TreeNode(data);
+            node = newNode;
+            return node;
+        }
+        else
+        {
+            if(data <= node.Data)
+            {
+                node.Left = RecursiveInset(data,node.Left);
+            }
+            else
+            {
+                node.Right = RecursiveInset(data,node.Right);
+            }
+            return node;
+        }
+    }
+
+    // 删除
+    public void Delete(int data)
+    {
+        RootNode = Delete(data,RootNode);
+    }
+    private TreeNode Delete(int data,TreeNode node)
+    {
+        if(node == null)
+        {
+            Debug.LogError("没有该元素 "+data);
+            return null;
+        }
+        else
+        {
+            // 找到
+            if(node.Data == data)
+            {
+                // 删除的节点两个子节点都在
+                if(node.Left != null && node.Right != null)
+                {   
+                    // 找到右边最大
+                    var temp = FindMax(node.Left);
+                    // 替换
+                    node.Data = temp.Data;
+                    // 删除
+                    node.Left = Delete(node.Data,node.Left);                    
+                }
+                // 没有
+                else if(node.Left != null)
+                    node = node.Left;
+                else if(node.Right != null)
+                    node = node.Right;
+
+                return node;
+            }
+            // 小于节点往左边走
+            else if(data < node.Data)
+            {
+                node.Left = Delete(data,node.Left);
+            }
+            // 大于节点往右边走
+            else if(data > node.Data)
+            {
+                node.Right = Delete(data,node.Right);
+            }
+
+            return node;
+        }
     }
 
     // 查找最小元素
     public TreeNode FindMin()
     {
+        return FindMin(RootNode);
+    }
+    private TreeNode FindMin(TreeNode node)
+    {
+        // 为空退出
+        if(IsEmpty())
+            return null;
+
+        var temp = node;
+        
+        // 找到最左边的节点
+        while(temp != null)
+        {
+            // 左边为空 返回
+            if(temp.Left == null)
+                return temp;
+            else // 左边不为空继续循环
+                temp = temp.Left;
+        }
+
         return null;
     }
     // 查找最大元素
     public TreeNode FindMax()
     {
+        return FindMax(RootNode);
+    }
+    private TreeNode FindMax(TreeNode node)
+    {
+        // 为空退出
+        if(IsEmpty())
+            return null;
+        
+        var temp = node;
+
+        // 找到最右边的节点
+        while(temp != null)
+        {
+            // 右边为空 返回
+            if(temp.Right == null)
+                return temp;
+            else // 右边不为空继续循环
+                temp = temp.Right;
+        }
+
         return null;
     }
     
@@ -195,7 +350,29 @@ class BinarySearchTree
     // 层次遍历
     public void LevelOrderTraversal()
     {
-        
+        Debug.Log("后序遍历:");
+        // 为空退出
+        if(IsEmpty())
+            return;
+
+        // 创建队列
+        LQueue<TreeNode> queue = new LQueue<TreeNode>(10);
+        queue.AddQueue(RootNode);
+
+        while(!queue.IsEmptry())
+        {
+            // 拿取一个
+            var temp = queue.Delete();
+            // 打印
+            Debug.Log(""+temp.Data);
+            // 左边放入队列
+            if(temp.Left != null)
+                queue.AddQueue(temp.Left);
+            // 右边放入队列
+            if(temp.Right != null)
+                queue.AddQueue(temp.Right);
+        }
+
     }
     // 递归遍历
     private void RecursiveTraversal(TreeNode treeNode,int orderType)
