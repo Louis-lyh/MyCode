@@ -26,35 +26,40 @@ public class Tree : MonoBehaviour
     private void TestBinarySearchTree()
     {
         BinarySearchTree tree = new BinarySearchTree();
-        tree.RecursiveInset(5);
-        tree.RecursiveInset(2);
-        tree.RecursiveInset(8);
-        tree.RecursiveInset(3);
-        tree.RecursiveInset(6);
-        tree.RecursiveInset(4);
-        tree.RecursiveInset(7);
-        tree.RecursiveInset(1);
-        tree.RecursiveInset(9);
-        tree.RecursiveInset(0);
-        tree.RecursiveInset(10);
-        
-        // 遍历
-        TestOrderTraversal(tree);
+        tree.Insert(5);
+        tree.Insert(2);
+        tree.Insert(8);
+        tree.Insert(3);
+        tree.Insert(6);
+        tree.Insert(4);
+        tree.Insert(7);
+        tree.Insert(1);
+        tree.Insert(9);
+        tree.Insert(0);
+        tree.Insert(10);
 
-        // 最大元素
-        Debug.Log("最大元素： "+tree.FindMax().Data);
-        // 最小元素
-        Debug.Log("最小元素： "+tree.FindMin().Data);
-        // 高度
-        Debug.Log("高度："+tree.GetHeight());
-        // 删除
-        tree.Delete(10);
-        // 中序
-        tree.InOrderTraversal();
-        // 删除
-        tree.Delete(2);
-         // 中序
-        tree.InOrderTraversal();
+        Debug.Log("树： "+tree.ToString());
+        tree.RecursiveInset(-1);
+        Debug.Log("树： "+tree.ToString());
+         tree.RecursiveInset(15);
+        Debug.Log("树： "+tree.ToString());
+        // // 遍历
+        // TestOrderTraversal(tree);
+
+        // // 最大元素
+        // Debug.Log("最大元素： "+tree.FindMax().Data);
+        // // 最小元素
+        // Debug.Log("最小元素： "+tree.FindMin().Data);
+        // // 高度
+        // Debug.Log("高度："+tree.GetHeight());
+        // // 删除
+        // tree.Delete(10);
+        // // 中序
+        // tree.InOrderTraversal();
+        // // 删除
+        // tree.Delete(2);
+        //  // 中序
+        // tree.InOrderTraversal();
         // 高度
         Debug.Log("高度："+tree.GetHeight());
     }
@@ -101,10 +106,14 @@ class TreeNode
     {
         Data = data;
     }
-
+    // 数据
     public int Data;
+    // 左儿子
     public TreeNode Left;
+    // 右儿子
     public TreeNode Right;
+    // 高
+    public int Height;
 }
 // 二叉搜索树
 class BinarySearchTree
@@ -172,6 +181,8 @@ class BinarySearchTree
                     if (temp.Left == null)
                     {
                         temp.Left = newNode;
+                        // 更新高度
+                        temp.Height = GetHeight(temp);
                         return;
                     }
                     else // 往左边走
@@ -187,6 +198,8 @@ class BinarySearchTree
                     if (temp.Right == null)
                     {
                         temp.Right = newNode;
+                        // 更新高度
+                        temp.Height = GetHeight(temp);
                         return;
                     }
                     else// 往右边走
@@ -216,11 +229,26 @@ class BinarySearchTree
             if(data <= node.Data)
             {
                 node.Left = RecursiveInset(data,node.Left);
+                /* 如果需要左旋 */
+                if ( GetHeight(node.Left)-GetHeight(node.Right) == 2 )
+                    if ( data < node.Left.Data ) 
+                        node = SingleLeftRotation(node);      /* 左单旋 */
+                    else 
+                        node = DoubleLeftRightRotation(node); /* 左-右双旋 */
             }
             else
             {
                 node.Right = RecursiveInset(data,node.Right);
+                /* 如果需要右旋 */
+                if ( GetHeight(node.Left)-GetHeight(node.Right) == -2 )
+                    if ( data > node.Right.Data ) 
+                        node = SingleRightRotation(node);     /* 右单旋 */
+                    else 
+                       node = DoubleRightLeftRotation(node); /* 右-左双旋 */
             }
+            /* 别忘了更新树高 */
+            node.Height = GetHeight(node);
+
             return node;
         }
     }
@@ -350,7 +378,7 @@ class BinarySearchTree
     // 层次遍历
     public void LevelOrderTraversal()
     {
-        Debug.Log("后序遍历:");
+        Debug.Log("层次遍历:");
         // 为空退出
         if(IsEmpty())
             return;
@@ -398,6 +426,138 @@ class BinarySearchTree
                 Debug.Log(treeNode.Data + " ");
         }
     }
+
+    // 左单旋
+    private TreeNode SingleLeftRotation(TreeNode A)
+    {
+        /* 注意：A必须有一个左子结点B */
+        /* 将A与B做左单旋，更新A与B的高度，返回新的根结点B */     
+
+        TreeNode B = A.Left;
+        A.Left = B.Right;
+        B.Right = A;
+        A.Height = Mathf.Max( GetHeight(A.Left), GetHeight(A.Right) ) + 1;
+        B.Height = Mathf.Max( GetHeight(B.Left), A.Height ) + 1;
+    
+        return B;
+    }
+    // 右单旋
+    private TreeNode SingleRightRotation(TreeNode A )
+    {
+        /* 注意：A必须有一个右子结点B */
+        /* 将A与B做左单旋，更新A与B的高度，返回新的根结点B */  
+
+        TreeNode B = A.Right;
+        A.Right = B.Left;
+        B.Left = A;
+
+        A.Height = Mathf.Max( GetHeight(A.Left), GetHeight(A.Right) ) + 1;
+        B.Height = Mathf.Max( GetHeight(B.Left), A.Height ) + 1;
+    
+        return B;
+    }
+    // 左右双旋
+    private TreeNode DoubleLeftRightRotation ( TreeNode A )
+    { 
+        /* 注意：A必须有一个左子结点B，且B必须有一个右子结点C */
+        /* 将A、B与C做两次单旋，返回新的根结点C */
+        
+        /* 将B与C做右单旋，C被返回 */
+        A.Left = SingleRightRotation(A.Left);
+        /* 将A与C做左单旋，C被返回 */
+        return SingleLeftRotation(A);
+    }
+    // 右左双旋
+    private TreeNode DoubleRightLeftRotation(TreeNode A) 
+    {
+         /* 注意：A必须有一个右子结点B，且B必须有一个左子结点C */
+        /* 将A、B与C做两次单旋，返回新的根结点C */
+        
+        /* 将B与C做左单旋，C被返回 */
+        A.Right = SingleLeftRotation(A.Right);
+        /* 将A与C做右单旋，C被返回 */
+        return SingleRightRotation(A);
+    }
+
+    public override string ToString()
+    {
+        var maxHeight = GetHeight();
+        string str = "";
+        
+         // 为空退出
+        if(IsEmpty())
+            return str;
+        
+        // 当前高度
+        int curHeight = 0;
+        // 当前层节点索引
+        int curIndex = 0;
+
+        // 创建队列
+        LQueue<TreeNode> queue = new LQueue<TreeNode>(10);
+        queue.AddQueue(RootNode);
+
+        while(!queue.IsEmptry())
+        {
+            // 拿取一个
+            var temp = queue.Delete();
+            // 当前高度
+            var tempHeight = temp.Height;
+            if(temp.Data != int.MinValue)
+                tempHeight = GetHeight(temp);
+            // 层不同 换行，缩进
+            if(tempHeight != curHeight)
+            {
+                str += "\n";
+                // 更新当前高度
+                curHeight = tempHeight;
+                // 重新计算索引
+                curIndex = 0;
+            }
+            // 索引加一
+            curIndex++;
+            // 输出值
+            for(int i = 0; i < Mathf.Pow(2,tempHeight - 1) - 1; i++)
+            {
+                str += " ";
+            }
+            if(temp.Data != int.MinValue)
+            {
+                str += $"{temp.Data:D2}";
+            }   
+            else
+            {
+                str += "__";   
+            }
+            for(int i = 0; i < Mathf.Pow(2,tempHeight - 1) - 1; i++)
+            {
+                str += " ";
+            }
+               
+           
+            // 左边放入队列
+            if(temp.Left != null)
+                queue.AddQueue(temp.Left);
+            else if(tempHeight - 1 > 0) // 为空放入一个空的站位
+            {
+                TreeNode nullNode = new TreeNode(int.MinValue);
+                nullNode.Height = tempHeight - 1;
+                queue.AddQueue(nullNode);
+            }
+            // 右边放入队列
+            if(temp.Right != null)
+                queue.AddQueue(temp.Right);
+            else if(tempHeight - 1 > 0) // 为空放入一个空的站位
+            {
+                TreeNode nullNode = new TreeNode(int.MinValue);
+                nullNode.Height = tempHeight - 1;
+                queue.AddQueue(nullNode);
+            }
+        }
+
+        return str;
+    }
+
 }
 
 
