@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 
 namespace LouisCode.DataStructure
@@ -31,14 +29,13 @@ namespace LouisCode.DataStructure
         private void TestList()
         {
             // 链表
-            List lNodeList = new List();
+            LList<int> lNodeList = new LList<int>();
             
             // 初始化链表
             for (int i = 0; i < 10; i++)
             {
-                LNode node = new LNode();
-                node.Data = i + 1;
-                lNodeList.Insert(node, i);
+                // 插入
+                lNodeList.Insert(i + 1, i);
             }
             
             // 获取长度
@@ -53,17 +50,11 @@ namespace LouisCode.DataStructure
             Debug.Log("lNodeList " + lNodeList.ToString()); 
             
             // 添加
-            LNode newNode = new LNode();
-            newNode.Data = 1;
-            lNodeList.Insert(newNode, 0);
+            lNodeList.Insert(1, 0);
             
-            LNode newNode02 = new LNode();
-            newNode02.Data = 5;
-            lNodeList.Insert(newNode02, 4);
+            lNodeList.Insert(5, 4);
             
-            LNode newNode03 = new LNode();
-            newNode03.Data = 10;
-            lNodeList.Insert(newNode03, 9);
+            lNodeList.Insert(10, 9);
             // 打印
             Debug.Log("lNodeList " + lNodeList.ToString()); 
         }
@@ -90,7 +81,7 @@ namespace LouisCode.DataStructure
             }
             
             // 链式存储的栈
-            ListStack lNodeListStack = new ListStack();
+            ListStack<int> lNodeListStack = new ListStack<int>();
             
             lNodeListStack.Push(1);
             lNodeListStack.Push(2);
@@ -112,43 +103,43 @@ namespace LouisCode.DataStructure
         // 测试队列
         private void TestLQueue()
         {
-            LQueue queue = new LQueue();
+            ListQueue<int> queue = new ListQueue<int>();
 
             int value = 1;
             while(value < 10)
             {
-                queue.AddQueue(value);
+                queue.Enqueue(value);
                 value++;
                 Debug.Log("queue.Lenght "+queue.Length);
             }
 
-            queue.AddQueue(value);
+            queue.Enqueue(value);
             Debug.Log("queue :  " + queue.ToString());
-            value = queue.Delete();
+            value = queue.Dequeue();
             Debug.Log("value :  " + value);
             Debug.Log("queue :  " + queue.ToString());
-            value = queue.Delete();
+            value = queue.Dequeue();
             Debug.Log("value :  " + value);
 
             Debug.Log("queue :  " + queue.ToString());
 
-            queue.AddQueue(value);
+            queue.Enqueue(value);
             Debug.Log("queue.Lenght "+queue.Length);
             Debug.Log("queue :  " + queue.ToString());
 
 
-            value = queue.Delete();
-            value = queue.Delete();
+            value = queue.Dequeue();
+            value = queue.Dequeue();
 
-            queue.AddQueue(value);
+            queue.Enqueue(value);
             Debug.Log("queue.Lenght "+queue.Length);
             Debug.Log("queue :  " + queue.ToString());
 
 
-            value = queue.Delete();
-            value = queue.Delete();
+            value = queue.Dequeue();
+            value = queue.Dequeue();
 
-            queue.AddQueue(value);
+            queue.Enqueue(value);
             Debug.Log("queue.Lenght "+queue.Length);
             Debug.Log("queue :  " + queue.ToString());
 

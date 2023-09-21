@@ -5,21 +5,31 @@ using UnityEngine;
 namespace LouisCode.DataStructure
 {
     // 链式存储队列
-    class LQueue
+    class ListQueue<T>
     {
-    
-        public LQueue()
+        // 队列节点
+        private class QNode<T>
         {
-            _front = new LNode();
-            _after = new LNode();
+            public T Data;
+            public QNode<T> Next;
+        }
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public ListQueue()
+        {
+            _front = new QNode<T>();
+            _after = new QNode<T>();
         }
     
         // 数据
-        LNode _front;
+        QNode<T> _front;
         // 尾节点
-        LNode _after;
+        QNode<T> _after;
     
-        // 长度
+        /// <summary>
+        /// 队列长度
+        /// </summary>
         public int Length => GetLength();
         private int GetLength()
         {
@@ -34,17 +44,23 @@ namespace LouisCode.DataStructure
             return i;
         }
     
-        // 是否为空
+        /// <summary>
+        /// 是否为空
+        /// </summary>
+        /// <returns></returns>
         public bool IsEmptry()
         {
             return GetLength() == 0;
         }
     
-        // 添加
-        public void AddQueue(int data)
+        /// <summary>
+        /// 加入队列
+        /// </summary>
+        /// <param name="data"></param>
+        public void Enqueue(T data)
         {
            // 新建
-           LNode newNode = new LNode();
+           QNode<T> newNode = new QNode<T>();
            newNode.Data = data;
     
             // 头节点为空
@@ -60,21 +76,29 @@ namespace LouisCode.DataStructure
                 _after.Next = newNode;
             }
         }
-        // 删除
-        public int Delete()
+        /// <summary>
+        ///  出队列
+        /// </summary>
+        /// <returns></returns>
+        public T Dequeue()
         {
-           if(_front.Next == null)
+            
+           if(IsEmptry())
            {
                Debug.LogError("队列为空");
-               return -1;
+               return default;
            }
-    
+           
+           // 移除节点
            var temp = _front.Next;
            _front.Next = temp.Next;
     
             return temp.Data;
         }
-    
+        /// <summary>
+        /// 格式化文本
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var temp = _front.Next;
