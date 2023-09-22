@@ -4,87 +4,54 @@ using UnityEngine;
 
 namespace LouisCode.DataStructure
 {
-    // 链式存储堆栈
-    class ListStack<T>
+    class LStack<T>
     {
-        /// <summary>
-        /// 堆栈元素节点
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        private class SNode<T>
+        public LStack(int length)
         {
-            public T Data;
-            public SNode<T> Next;
+            // 初始化栈大小
+            Datas = new T[length];
+            // 初始化栈顶位置
+            Top = -1;
         }
+        // 栈
+        private T[] Datas;
+        // 长度
+        public int Length => Datas.Length;
         
-        public ListStack()
+        // 栈顶位置
+        public int Top;
+        // 判断堆栈是否已满
+        public bool IsFull()
         {
-            _topNode = new SNode<T>();
+            return Top == Length - 1;
         }
-
-        // 栈顶节点
-        private SNode<T> _topNode;
-    
-        /// <summary>
-        /// 元素数量
-        /// </summary>
-        public int Count => GetCount();
-        private int GetCount()
-        {
-            var temp = _topNode.Next;
-            var length = 0;
-            // 循环遍历栈元素
-            while (temp != null)
-            {
-                length++;
-                temp = temp.Next;
-            }
-
-            return length;
-        }
-
-        /// <summary>
-        /// 判断堆栈是否为空
-        /// </summary>
-        /// <returns></returns>
+        // 判断堆栈是否为空
         public bool IsEmpty()
         {
-            return _topNode.Next == null;
+            return Top < 0;
         }
-        /// <summary>
-        /// 入栈
-        /// </summary>
-        /// <param name="data"></param>
+        // 入栈
         public void Push(T data)
         {
-            // 创建新节点
-            SNode<T> newNode = new SNode<T>();
-            newNode.Data = data;
-            // 插入
-            newNode.Next = _topNode.Next;
-            _topNode.Next = newNode;
+            if (IsFull())
+            {
+                Debug.LogError("栈满了");
+                return;
+            }
+            Datas[++Top] = data;
         }
-    
-        /// <summary>
-        ///  出栈
-        /// </summary>
-        /// <returns></returns>
+        // 出栈
         public T Pop()
         {
-            // 栈为空
             if (IsEmpty())
             {
                 Debug.LogError("栈空了");
-                return default;
+                return default(T);
             }
             
-            // 移除第一个元素
-            var temp = _topNode.Next;
-            _topNode.Next = temp.Next;
-
-            return temp.Data;
+            return  Datas[Top--];
         }
     }
-}
 
+}
 

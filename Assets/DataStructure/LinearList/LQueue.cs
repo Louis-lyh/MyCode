@@ -4,115 +4,86 @@ using UnityEngine;
 
 namespace LouisCode.DataStructure
 {
-    // 链式存储队列
-    class ListQueue<T>
+    class Queue<T>
     {
-        // 队列节点
-        private class QNode<T>
+    
+        public Queue(int length)
         {
-            public T Data;
-            public QNode<T> Next;
-        }
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        public ListQueue()
-        {
-            _front = new QNode<T>();
-            _after = new QNode<T>();
+            _datas = new T[length];
+            _front = -1;
+            _after = -1;
         }
     
         // 数据
-        QNode<T> _front;
-        // 尾节点
-        QNode<T> _after;
+        private T[] _datas;
+        // 前
+        private int _front;
+        // 后
+        private int _after;
     
-        /// <summary>
-        /// 队列长度
-        /// </summary>
-        public int Length => GetLength();
-        private int GetLength()
+        // 长度
+        public int Lenght
         {
-            var temp = _front.Next;
-            int i = 0;
-            while(temp != null)
+            get
             {
-                temp = temp.Next;
-                i++;
+                if(_front > _after)
+                    return _after + _datas.Length - _front;
+                else
+                    return _after - _front;
             }
-    
-            return i;
         }
-    
-        /// <summary>
-        /// 是否为空
-        /// </summary>
-        /// <returns></returns>
+        // 判断队列是否满了
+        public bool IsFull()
+        {
+            return Lenght == _datas.Length - 1;
+        }
+        // 判断队列是否为空
         public bool IsEmptry()
         {
-            return GetLength() == 0;
+            return Lenght == 0;
         }
     
-        /// <summary>
-        /// 加入队列
-        /// </summary>
-        /// <param name="data"></param>
-        public void Enqueue(T data)
+        // 加入队列
+        public void AddQueue(T data)
         {
-           // 新建
-           QNode<T> newNode = new QNode<T>();
-           newNode.Data = data;
-    
-            // 头节点为空
-            if(_front.Next == null)
-                _front.Next = newNode;
-    
-            // 尾节点为空
-            if(_after.Next == null)
-                _after.Next = newNode;
-            else
+            if(IsFull())
             {
-                _after.Next.Next = newNode;
-                _after.Next = newNode;
+                Debug.LogError("队列满了");
+                return;
             }
+            _after = (_after + 1) % _datas.Length;
+            _datas[_after] = data;
         }
-        /// <summary>
-        ///  出队列
-        /// </summary>
-        /// <returns></returns>
-        public T Dequeue()
+        // 删除队列
+        public T Delete()
         {
+            if(IsEmptry())
+            {
+                Debug.LogError("队列为空");
+                return default;
+            }
             
-           if(IsEmptry())
-           {
-               Debug.LogError("队列为空");
-               return default;
-           }
-           
-           // 移除节点
-           var temp = _front.Next;
-           _front.Next = temp.Next;
+            _front = (_front + 1) % _datas.Length;
+            var temp = _datas[_front];
+            _datas[_front] = default;
     
-            return temp.Data;
+            return temp;
         }
-        /// <summary>
-        /// 格式化文本
-        /// </summary>
-        /// <returns></returns>
+    
         public override string ToString()
         {
-            var temp = _front.Next;
+            int f = _front;
+            int a = _after;
             string str = "";
-            while(temp != null)
+            while(f != a)
             {
-                str += temp.Data + " , ";
-                temp = temp.Next;
+                f = (f + 1) % _datas.Length;
+                str += "" +_datas[f] + " , ";
             }
     
             return str;
         }
-    
     }
-}
 
+}
 

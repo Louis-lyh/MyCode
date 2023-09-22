@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class RelatedToLoadFile
 {
-    #region 读取文件中制定文件
+    #region 读取文件中指定文件
     /// <summary>
     /// 读取文件中的文本文件
     /// </summary>

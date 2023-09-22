@@ -10,7 +10,7 @@ public class RelatedToSaveFile
     /// <summary>
     /// 保存数据
     /// </summary>
-    /// <param name="strInfo">类容</param>
+    /// <param name="strInfo">内容</param>
     /// <param name="path">绝对路径</param>
     public static void SaveData(string strInfo,string path)
     {

@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace LouisCode.DataStructure
 {
-    // 树节点
+    /// <summary>
+    ///  树节点
+    /// </summary>
     class TreeNode
     {
         public TreeNode(int data)
@@ -20,22 +22,23 @@ namespace LouisCode.DataStructure
         // 高
         public int Height;
     }
-    // 二叉搜索树
+    /// <summary>
+    ///  二叉搜索树
+    /// </summary>
     class BinarySearchTree
     {
         // 根节点
-        public TreeNode RootNode;
+        private TreeNode RootNode;
         // 判断是否为空
         public bool IsEmpty()
         {
             return RootNode == null;
         }
         
-        // 获取高度
-        public int GetHeight()
-        {
-            return GetHeight(RootNode);
-        }
+        /// <summary>
+        /// 获取高度
+        /// </summary>
+        public int Height=>GetHeight(RootNode);
         private int GetHeight(TreeNode node)
         {
             if(node == null)
@@ -47,7 +50,11 @@ namespace LouisCode.DataStructure
             return Mathf.Max(leftHeight,rightHeight);
         }
         
-        // 查找元素返回其所在节点的地址
+        /// <summary>
+        /// 查找元素返回其所在节点的地址  
+        /// </summary>
+        /// <param name="data">元素</param>
+        /// <returns></returns>
         public TreeNode Find(int data)
         {
             var temp = RootNode;
@@ -65,7 +72,10 @@ namespace LouisCode.DataStructure
             }
             return null;
         }    
-        // 插入
+        /// <summary>
+        /// 插入
+        /// </summary>
+        /// <param name="data"></param>
         public void Insert(int data)
         {
             // 新建节点
@@ -115,7 +125,10 @@ namespace LouisCode.DataStructure
                 }
             }
         }
-        // 递归插入
+        /// <summary>
+        /// 递归插入
+        /// </summary>
+        /// <param name="data">插入的元素</param>
         public void RecursiveInset(int data)
         {
             RootNode = RecursiveInset(data,RootNode);
@@ -156,8 +169,11 @@ namespace LouisCode.DataStructure
                 return node;
             }
         }
-
-        // 删除
+        
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="data">元素</param>
         public void Delete(int data)
         {
             RootNode = Delete(data,RootNode);
@@ -206,8 +222,10 @@ namespace LouisCode.DataStructure
                 return node;
             }
         }
-
-        // 查找最小元素
+        /// <summary>
+        /// 查找最小元素
+        /// </summary>
+        /// <returns></returns>
         public TreeNode FindMin()
         {
             return FindMin(RootNode);
@@ -232,7 +250,10 @@ namespace LouisCode.DataStructure
 
             return null;
         }
-        // 查找最大元素
+        /// <summary>
+        /// 查找最大元素
+        /// </summary>
+        /// <returns></returns>
         public TreeNode FindMax()
         {
             return FindMax(RootNode);
@@ -256,25 +277,33 @@ namespace LouisCode.DataStructure
             }
             return null;
         }
-        // 先序遍历
+        /// <summary>
+        /// 先序遍历
+        /// </summary>
         public void PreOrderTraversal()
         {
             Debug.Log("先序遍历:");
             RecursiveTraversal(RootNode, 0);
         }
-        // 中序遍历
+        /// <summary>
+        /// 中序遍历
+        /// </summary>
         public void InOrderTraversal()
         {
             Debug.Log("中序遍历:");
             RecursiveTraversal(RootNode, 1);
         }
-        // 后序遍历
+        /// <summary>
+        /// 后序遍历
+        /// </summary>
         public void PostOrderTraversal()
         {
             Debug.Log("后序遍历:");
             RecursiveTraversal(RootNode, 2);
         }
-        // 层次遍历
+        /// <summary>
+        ///  层次遍历
+        /// </summary>
         public void LevelOrderTraversal()
         {
             Debug.Log("层次遍历:");
@@ -301,7 +330,11 @@ namespace LouisCode.DataStructure
             }
 
         }
-        // 递归遍历
+        /// <summary>
+        ///  递归遍历
+        /// </summary>
+        /// <param name="treeNode"></param>
+        /// <param name="orderType"></param>
         private void RecursiveTraversal(TreeNode treeNode,int orderType)
         {
             if (treeNode != null) 
@@ -326,7 +359,11 @@ namespace LouisCode.DataStructure
             }
         }
 
-        // 左单旋
+        /// <summary>
+        ///  左单旋
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
         private TreeNode SingleLeftRotation(TreeNode A)
         {
             /* 注意：A必须有一个左子结点B */
@@ -340,7 +377,11 @@ namespace LouisCode.DataStructure
         
             return B;
         }
-        // 右单旋
+        /// <summary>
+        ///  右单旋
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
         private TreeNode SingleRightRotation(TreeNode A )
         {
             /* 注意：A必须有一个右子结点B */
@@ -355,7 +396,11 @@ namespace LouisCode.DataStructure
         
             return B;
         }
-        // 左右双旋
+        /// <summary>
+        /// 左右双旋
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
         private TreeNode DoubleLeftRightRotation ( TreeNode A )
         { 
             /* 注意：A必须有一个左子结点B，且B必须有一个右子结点C */
@@ -366,7 +411,11 @@ namespace LouisCode.DataStructure
             /* 将A与C做左单旋，C被返回 */
             return SingleLeftRotation(A);
         }
-        // 右左双旋
+        /// <summary>
+        /// 右左双旋
+        /// </summary>
+        /// <param name="A"></param>
+        /// <returns></returns>
         private TreeNode DoubleRightLeftRotation(TreeNode A) 
         {
              /* 注意：A必须有一个右子结点B，且B必须有一个左子结点C */
@@ -380,7 +429,7 @@ namespace LouisCode.DataStructure
 
         public override string ToString()
         {
-            var maxHeight = GetHeight();
+            var maxHeight = Height;
             string str = "";
             
              // 为空退出

@@ -9,10 +9,10 @@ namespace LouisCode.DataStructure
         void Start()
         {
             // 测试链表
-            //TestList();
+            TestList();
             
             // 测试栈
-           // TestLStack();
+            TestLStack();
 
             // 测试队列
             TestLQueue();
@@ -81,7 +81,7 @@ namespace LouisCode.DataStructure
             }
             
             // 链式存储的栈
-            ListStack<int> lNodeListStack = new ListStack<int>();
+            StackList<int> lNodeListStack = new StackList<int>();
             
             lNodeListStack.Push(1);
             lNodeListStack.Push(2);
@@ -103,7 +103,7 @@ namespace LouisCode.DataStructure
         // 测试队列
         private void TestLQueue()
         {
-            ListQueue<int> queue = new ListQueue<int>();
+            QueueList<int> queue = new QueueList<int>();
 
             int value = 1;
             while(value < 10)

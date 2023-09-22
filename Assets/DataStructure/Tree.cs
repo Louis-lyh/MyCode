@@ -63,7 +63,7 @@ namespace LouisCode.DataStructure
             //  // 中序
             // tree.InOrderTraversal();
             // 高度
-            Debug.Log("高度："+tree.GetHeight());
+            Debug.Log("高度："+tree.Height);
         }
         private void TestOrderTraversal(BinarySearchTree tree)
         {
