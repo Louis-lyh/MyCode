@@ -10,10 +10,13 @@ namespace LouisCode.DataStructure
         private void Start()
         {
             // 测试二分查找
-            TestBinarySearch();
+            //TestBinarySearch();
 
             // 测试二叉树
-            TestBinarySearchTree();
+            //TestBinarySearchTree();
+            
+            // 测试完全二叉搜索树
+            TestCompleteBinarySearchTree();
         }
         
         // 测试二分查找
@@ -75,6 +78,27 @@ namespace LouisCode.DataStructure
             tree.PostOrderTraversal();
             // 层序
             tree.LevelOrderTraversal();
+        }
+        // 测试完全二叉搜索树
+        private void TestCompleteBinarySearchTree()
+        {
+            var tree = new CompleteBinarySearchTree(new []{1,2,3,6,5,4,7,8,9});
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(0)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(1)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(2)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(3)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(4)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(5)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(6)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(7)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(8)}");
+            Debug.Log($"1 length =  {tree.GetLeftChildCount(9)}");
+
+
+
+
+
+            Debug.Log($"tree =  {tree.ToString()}");
         }
 
         // 二分查找
