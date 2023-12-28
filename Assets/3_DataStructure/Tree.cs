@@ -82,7 +82,8 @@ namespace LouisCode.DataStructure
         // 测试完全二叉搜索树
         private void TestCompleteBinarySearchTree()
         {
-            var tree = new CompleteBinarySearchTree(new []{1,2,3,6,5,4,7,8,9});
+            //[-10,-3,0,5,9]
+            var tree = new CompleteBinarySearchTree(new []{-10,-3,0,5,9});
             Debug.Log($"1 length =  {tree.GetLeftChildCount(0)}");
             Debug.Log($"1 length =  {tree.GetLeftChildCount(1)}");
             Debug.Log($"1 length =  {tree.GetLeftChildCount(2)}");

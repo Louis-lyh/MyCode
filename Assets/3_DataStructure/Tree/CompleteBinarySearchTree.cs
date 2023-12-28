@@ -136,7 +136,7 @@ namespace LouisCode.DataStructure
             {
                 str += _items[i];
                 if (i < _items.Length - 1)
-                    str += "";
+                    str += " , ";
             }
             
             return str;
