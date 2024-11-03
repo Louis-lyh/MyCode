@@ -74,7 +74,9 @@ public class UIGradient : BaseMeshEffect
                     color = Color32.Lerp(twoColor, oneColor, (vertex.position.y - bottomY) / height);
                     break;
             }
-
+            // 不改变透明度
+            color.a = vertex.color.a;
+            
             vertex.color = color;
             
             vh.SetUIVertex(vertex, i);
