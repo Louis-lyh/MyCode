@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI 适配工具
+/// </summary>
 public class UIFixCanvasTool : MonoBehaviour
 {
     private void Awake()
