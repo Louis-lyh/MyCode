@@ -1,4 +1,4 @@
-﻿namespace _1_Code.AStart.Editor
+﻿namespace _1_Code.AStart
 {
     /// <summary>
     /// 地图元素
@@ -15,10 +15,13 @@
     {
         // 数据
         private MapItemType[][] _mapData;
+        public MapItemType[][] MapDataArray=> _mapData;
         // 起点
         private int _startIndex;
+        public int StartIndex => _startIndex;
         // 终点
         private int _endIndex;
+        public int EndIndex => _endIndex;
         
         // 尺寸
         public int Size=> _mapData.Length;
@@ -37,8 +40,11 @@
                 }
             }
 
-            _startIndex = -1;
-            _endIndex = -1;
+            _startIndex = 0;
+            _mapData[0][0] = MapItemType.Start;
+            
+            _endIndex = mapSize * mapSize - 1;
+            _mapData[mapSize - 1][mapSize - 1] = MapItemType.End;
         }
         
         /// <summary>

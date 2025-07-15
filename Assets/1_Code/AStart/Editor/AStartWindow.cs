@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using _1_Code.AStart.Editor;
+using _1_Code.AStart;
 using UnityEditor;
 using UnityEngine;
 
@@ -22,7 +22,12 @@ public class AStartWindow : EditorWindow
     // 地图数据
     private MapData _mapData;
     
+    // 按钮贴图
     private Dictionary<Color, Texture2D> colorTextures = new Dictionary<Color, Texture2D>();
+    
+    // 路径
+    List<int> path = new List<int>();
+    Dictionary<int,int> cameFrom = new Dictionary<int,int>();
     
     [MenuItem("MyCode/A* Window")]
     public static void ShowWindow()
@@ -74,6 +79,16 @@ public class AStartWindow : EditorWindow
             DrawCentered(() => {
                 sliderValue = EditorGUILayout.Slider("Slider", sliderValue, 0f, 1f);
             });
+            
+            // 技术按钮
+            EditorGUILayout.Space(20);
+            DrawCentered(() => {
+                if (GUILayout.Button("计算"))
+                {
+                    path = PathFinding.BreadthFirstSearch(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
+                }
+            });
+            
         }
         EditorGUILayout.EndScrollView();
     }
@@ -100,14 +115,18 @@ public class AStartWindow : EditorWindow
                     for (int x = 0; x < gridSize; x++)
                     {
                         var gridType = _mapData.GetMapItemType(x, y);
+                        var index = x + gridSize * y;
                         
-                        Color btnColor = GetButtonColor(gridType);
+                        // 按钮颜色
+                        Color btnColor = GetButtonColor(gridType,path.Contains(index));
                         // 创建按钮样式
                         GUIStyle btnStyle = new GUIStyle(GUI.skin.button);
                         btnStyle.normal.background = GetColorTexture(btnColor * 0.7f);
                         btnStyle.active.background = GetColorTexture(btnColor); // 点击时变亮
+                        // 按钮名称
+                        var buttonName = GetButtonName(gridType,index);
                         
-                        if (GUILayout.Button($"{gridType}", btnStyle,GUILayout.Width(btnSize), GUILayout.Height(btnSize)))
+                        if (GUILayout.Button(buttonName, btnStyle,GUILayout.Width(btnSize), GUILayout.Height(btnSize)))
                         {
                             // log
                             Debug.Log($"Clicked button: ({x}, {y}) => {(MapItemType)dropdownIndex2}");
@@ -147,12 +166,14 @@ public class AStartWindow : EditorWindow
         Repaint();
     }
 
-    private Color GetButtonColor(MapItemType gridType)
+    private Color GetButtonColor(MapItemType gridType,bool isPath = false)
     {
         switch (gridType)
         {
             case MapItemType.Road:
-                return Color.green;
+                if(isPath)
+                    return Color.green;
+                return Color.white;
             case MapItemType.OBS:
                 return Color.black;
             case MapItemType.Start:
@@ -162,6 +183,24 @@ public class AStartWindow : EditorWindow
         }
         
         return Color.white;
+    }
+
+    private string GetButtonName(MapItemType gridType,int index)
+    {
+        // 广度优先搜索
+        if (gridType == MapItemType.Road && dropdownIndex1 == 1)
+        {
+            if (cameFrom.ContainsKey(index))
+            {
+                var value = cameFrom[index] - index;
+                if (value == 1) return "→";
+                if (value > 1) return "⬇️↓";
+                if (value == -1) return "←";
+                if (value < -1) return "↑";
+            }
+        }
+
+        return gridType.ToString();
     }
 
     // 创建纯色纹理
