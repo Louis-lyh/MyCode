@@ -14,7 +14,7 @@ public class AStartWindow : EditorWindow
     private string[] dropdownOptions1 = { "A*", "BFS", "Dijkstra" };
     // 格子类型    
     private int dropdownIndex2 = 0;
-    private string[] dropdownOptions2 = { "路", "起点", "终点","障碍"};
+    private string[] dropdownOptions2 = { "路", "起点", "终点","障碍","沙地","草地"};
 
     // 滑动条进度
     private float sliderValue = 0.5f;
@@ -85,7 +85,10 @@ public class AStartWindow : EditorWindow
             DrawCentered(() => {
                 if (GUILayout.Button("计算"))
                 {
-                    path = PathFinding.BreadthFirstSearch(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
+                     if(dropdownIndex1 == 1)
+                        path = PathFinding.BreadthFirstSearch(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
+                     else if(dropdownIndex1 == 2)
+                        path = PathFinding.Dijkstra(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
                 }
             });
             
@@ -168,18 +171,28 @@ public class AStartWindow : EditorWindow
 
     private Color GetButtonColor(MapItemType gridType,bool isPath = false)
     {
+        ColorUtility.TryParseHtmlString("#008080ff", out Color colorIsPath);
+        
         switch (gridType)
         {
             case MapItemType.Road:
                 if(isPath)
-                    return Color.green;
+                    return colorIsPath;
                 return Color.white;
             case MapItemType.OBS:
                 return Color.black;
             case MapItemType.Start:
                 return Color.cyan;
             case MapItemType.End:
+                return Color.blue;
+            case MapItemType.Sand:
+                if(isPath)
+                    return colorIsPath;
                 return Color.yellow;
+            case MapItemType.Grass:
+                if(isPath)
+                    return colorIsPath;
+                return Color.green;
         }
         
         return Color.white;
@@ -188,13 +201,15 @@ public class AStartWindow : EditorWindow
     private string GetButtonName(MapItemType gridType,int index)
     {
         // 广度优先搜索
-        if (gridType == MapItemType.Road && dropdownIndex1 == 1)
+        if (
+            (gridType == MapItemType.Road)
+            && dropdownIndex1 == 1)
         {
             if (cameFrom.ContainsKey(index))
             {
                 var value = cameFrom[index] - index;
                 if (value == 1) return "→";
-                if (value > 1) return "⬇️↓";
+                if (value > 1) return "↓";
                 if (value == -1) return "←";
                 if (value < -1) return "↑";
             }

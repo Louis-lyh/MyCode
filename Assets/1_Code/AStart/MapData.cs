@@ -9,6 +9,8 @@
         Start, // 起点
         End,   // 终点
         OBS,   // 障碍
+        Sand,  // 沙滩
+        Grass, // 草地
     }
 
     public class MapData
