@@ -85,9 +85,11 @@ public class AStartWindow : EditorWindow
             DrawCentered(() => {
                 if (GUILayout.Button("计算"))
                 {
-                     if(dropdownIndex1 == 1)
+                    if(dropdownIndex1 == 0)
+                        path = PathFinding.AStart(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
+                    else if(dropdownIndex1 == 1)
                         path = PathFinding.BreadthFirstSearch(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
-                     else if(dropdownIndex1 == 2)
+                    else if(dropdownIndex1 == 2)
                         path = PathFinding.Dijkstra(_mapData.MapDataArray,_mapData.StartIndex,_mapData.EndIndex,out cameFrom);
                 }
             });
@@ -122,10 +124,15 @@ public class AStartWindow : EditorWindow
                         
                         // 按钮颜色
                         Color btnColor = GetButtonColor(gridType,path.Contains(index));
+                        
                         // 创建按钮样式
                         GUIStyle btnStyle = new GUIStyle(GUI.skin.button);
+                        // 重置状态确保完全清除默认样式
+                        btnStyle.normal = new GUIStyleState();
+                        btnStyle.active = new GUIStyleState();
                         btnStyle.normal.background = GetColorTexture(btnColor * 0.7f);
                         btnStyle.active.background = GetColorTexture(btnColor); // 点击时变亮
+                        btnStyle.normal.textColor = Color.white;
                         // 按钮名称
                         var buttonName = GetButtonName(gridType,index);
                         
@@ -201,9 +208,7 @@ public class AStartWindow : EditorWindow
     private string GetButtonName(MapItemType gridType,int index)
     {
         // 广度优先搜索
-        if (
-            (gridType == MapItemType.Road)
-            && dropdownIndex1 == 1)
+        if (gridType == MapItemType.Road)
         {
             if (cameFrom.ContainsKey(index))
             {
